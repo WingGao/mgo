@@ -630,6 +630,8 @@ type externalPanic string
 func (e externalPanic) String() string {
 	return string(e)
 }
+//export
+var GetStructInfo = getStructInfo
 
 func getStructInfo(st reflect.Type) (*structInfo, error) {
 	structMapMutex.RLock()
