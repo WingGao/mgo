@@ -388,10 +388,10 @@ func (socket *mongoSocket) Query(ops ...interface{}) (err error) {
 	requestCount := 0
 
 	for _, op := range ops {
-		debugOpf("Socket %p to %s: serializing op: %#v", socket, socket.addr, op)
+		//debugOpf("Socket %p to %s: serializing op: %#v", socket, socket.addr, op)
 		if qop, ok := op.(*queryOp); ok {
 			if cmd, ok := qop.query.(*findCmd); ok {
-				debugf("Socket %p to %s: find command: %#v", socket, socket.addr, cmd)
+				debugOpf("Socket %p to %s: find command: %#v", socket, socket.addr, cmd)
 			}
 		}
 		start := len(buf)
@@ -403,12 +403,12 @@ func (socket *mongoSocket) Query(ops ...interface{}) (err error) {
 			buf = addInt32(buf, 0) // Reserved
 			buf = addCString(buf, op.Collection)
 			buf = addInt32(buf, int32(op.Flags))
-			debugf("Socket %p to %s: serializing selector document: %#v", socket, socket.addr, op.Selector)
+			debugOpf("Socket %p to %s: serializing selector document: %#v", socket, socket.addr, op.Selector)
 			buf, err = addBSON(buf, op.Selector)
 			if err != nil {
 				return err
 			}
-			debugf("Socket %p to %s: serializing update document: %#v", socket, socket.addr, op.Update)
+			debugOpf("Socket %p to %s: serializing update document: %#v", socket, socket.addr, op.Update)
 			buf, err = addBSON(buf, op.Update)
 			if err != nil {
 				return err
@@ -419,7 +419,7 @@ func (socket *mongoSocket) Query(ops ...interface{}) (err error) {
 			buf = addInt32(buf, int32(op.flags))
 			buf = addCString(buf, op.collection)
 			for _, doc := range op.documents {
-				debugf("Socket %p to %s: serializing document for insertion: %#v", socket, socket.addr, doc)
+				debugOpf("Socket %p to %s: serializing document for insertion: %#v", socket, socket.addr, doc)
 				buf, err = addBSON(buf, doc)
 				if err != nil {
 					return err
@@ -457,7 +457,7 @@ func (socket *mongoSocket) Query(ops ...interface{}) (err error) {
 			buf = addInt32(buf, 0) // Reserved
 			buf = addCString(buf, op.Collection)
 			buf = addInt32(buf, int32(op.Flags))
-			debugf("Socket %p to %s: serializing selector document: %#v", socket, socket.addr, op.Selector)
+			debugOpf("Socket %p to %s: serializing selector document: %#v", socket, socket.addr, op.Selector)
 			buf, err = addBSON(buf, op.Selector)
 			if err != nil {
 				return err

@@ -29,6 +29,7 @@ package mgo
 import (
 	"fmt"
 	"sync"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // ---------------------------------------------------------------------------
@@ -134,12 +135,13 @@ func debugf(format string, v ...interface{}) {
 	}
 }
 
-func debugOpf(format string, v ...interface{}) {
+func debugOpf(format string, socket *mongoSocket, addr string, op interface{}) {
 	if raceDetector {
 		globalMutex.Lock()
 		defer globalMutex.Unlock()
 	}
 	if globalDebug && globalLogger != nil {
-		globalLogger.DebugOp(format, v ...)
+		bs, _ := bson.MarshalJSON(op)
+		globalLogger.DebugOp("Socket %p to %s: serializing op: %s", socket, addr, bs)
 	}
 }
