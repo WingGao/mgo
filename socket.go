@@ -388,7 +388,7 @@ func (socket *mongoSocket) Query(ops ...interface{}) (err error) {
 	requestCount := 0
 
 	for _, op := range ops {
-		debugf("Socket %p to %s: serializing op: %#v", socket, socket.addr, op)
+		debugOpf("Socket %p to %s: serializing op: %#v", socket, socket.addr, op)
 		if qop, ok := op.(*queryOp); ok {
 			if cmd, ok := qop.query.(*findCmd); ok {
 				debugf("Socket %p to %s: find command: %#v", socket, socket.addr, cmd)

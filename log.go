@@ -39,6 +39,8 @@ import (
 // often the logger is plugged in, it would be worth using the type instead.
 type log_Logger interface {
 	Output(calldepth int, s string) error
+	Debug(calldepth int, s string) error
+	DebugOp(format string, v ...interface{}) error
 }
 
 var (
@@ -108,7 +110,7 @@ func debug(v ...interface{}) {
 		defer globalMutex.Unlock()
 	}
 	if globalDebug && globalLogger != nil {
-		globalLogger.Output(2, fmt.Sprint(v...))
+		globalLogger.Debug(2, fmt.Sprint(v...))
 	}
 }
 
@@ -118,7 +120,7 @@ func debugln(v ...interface{}) {
 		defer globalMutex.Unlock()
 	}
 	if globalDebug && globalLogger != nil {
-		globalLogger.Output(2, fmt.Sprintln(v...))
+		globalLogger.Debug(2, fmt.Sprintln(v...))
 	}
 }
 
@@ -128,6 +130,16 @@ func debugf(format string, v ...interface{}) {
 		defer globalMutex.Unlock()
 	}
 	if globalDebug && globalLogger != nil {
-		globalLogger.Output(2, fmt.Sprintf(format, v...))
+		globalLogger.Debug(2, fmt.Sprintf(format, v...))
+	}
+}
+
+func debugOpf(format string, v ...interface{}) {
+	if raceDetector {
+		globalMutex.Lock()
+		defer globalMutex.Unlock()
+	}
+	if globalDebug && globalLogger != nil {
+		globalLogger.DebugOp(format, v ...)
 	}
 }
