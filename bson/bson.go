@@ -834,3 +834,7 @@ func getStructInfo(st reflect.Type) (*structInfo, error) {
 	structMapMutex.Unlock()
 	return sinfo, nil
 }
+
+func GetStructInfo(st reflect.Type) (*structInfo, error) {
+	return getStructInfo(st)
+}
